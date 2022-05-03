@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Service Table
+model Service {
+  id                    Int       @id @unique @default(autoincrement())
+  // Visible to Students
+  name                  String    @unique
+  causeArea             CauseArea
+  work                  String?
+  address               String
+  email                 String
+  phone                 String
+  maxStudents           Int
+  availableStudentSlots Int       @default(0)
+  // Not Visible to Students
+  published             Boolean   @default(false)
+  reminded              Boolean   @default(false)
+  notes                 String?
+}
+
+// All Cause Areas for Service
+enum CauseArea {
+  EARLY_CHILDHOOD
+  CARING_FOR_ELDERS_AND_COMMUNITY
+  ENVIRONMENT
+  HEALTH_AND_HUMAN_SERVICES
+  HUNGER_HOMLESSLESS_AND_POVERTY
+}
+
+// Access Tokens for DB Editing
+model Token {
+  id    Int    @id @unique @default(autoincrement())
+  token String @unique
+}
