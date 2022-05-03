@@ -1,7 +1,6 @@
 import { Service } from '@prisma/client'
 import React, { useState } from 'react'
 import beautifyCauseArea from '../lib/util';
-import ServiceModal from './ServiceModal';
 
 interface ServiceCardProps {
     service: Service;
@@ -13,7 +12,7 @@ export default function ServiceCard(props: ServiceCardProps) {
     let modalToggleName: string = `#service-modal-${props.service.id}`
     return (
         <>
-            <button type="button" onClick={() => setShowModal(true)} className="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
+            <button type="button" onClick={() => setShowModal(true)} className="block p-6 w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{props.service.name}</h5>
                 <p className="font-normal text-gray-700">{props.service.address}</p>
             </button>
@@ -35,7 +34,7 @@ export default function ServiceCard(props: ServiceCardProps) {
                                         onClick={() => setShowModal(false)}
                                     >
                                         <span className="bg-transparent text-black opacity-50 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                                            ×
+                                            x
                                         </span>
                                     </button>
                                 </div>
@@ -57,7 +56,7 @@ export default function ServiceCard(props: ServiceCardProps) {
                                         <span className="text-2xl font-medium">Address: </span>
                                         <span className="text-lg text-slate-700">
                                             {props.service.address ?
-                                                <a className="text-blue-500 text-decoration-line: underline"
+                                                <a className="text-blue-500 hover:text-blue-600 text-decoration-line: underline"
                                                     href={"https://maps.google.com/?q=" + props.service.address}>
                                                     {props.service.address}
                                                 </a>
@@ -73,9 +72,9 @@ export default function ServiceCard(props: ServiceCardProps) {
                                 </div>
                                 {/*footer*/}
                                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                                    <a type="button" className="button shadow-md border-1 p-1 rounded-md mx-2 bg-blue-200"
+                                    <a type="button" className="button shadow-md border-1 p-1 rounded-md mx-2 bg-blue-200 hover:bg-blue-300"
                                         href={"mailto:" + props.service.email}>Email Service</a>
-                                    <a type="button" className="button shadow-md border-1 p-1 rounded-md mx-2 bg-green-200"
+                                    <a type="button" className="button shadow-md border-1 p-1 rounded-md mx-2 bg-green-200 hover:bg-green-300"
                                         href={"tel:" + props.service.phone}>Call Service</a>
                                 </div>
                             </div>
