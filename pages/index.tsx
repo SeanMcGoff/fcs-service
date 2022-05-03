@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from 'next'
+import type { GetServerSideProps, NextPage, InferGetServerSidePropsType } from 'next'
 import prisma from '../lib/prisma';
 import { Service } from '@prisma/client';
 import ServiceCard from '../components/ServiceCard';
@@ -8,12 +8,12 @@ interface HomeProps {
   services: Service[]
 }
 
-const Home: NextPage<HomeProps> = (props: HomeProps) => {
+const Home: NextPage<HomeProps> = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Navbar />
       <div className="container mx-auto">
-        {props.services.map((service => <ServiceCard service={service} />))}
+        {props.services.map(((service: Service) => <ServiceCard service={service} key={service.id} />))}
       </div>
 
     </>
