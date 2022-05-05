@@ -9,13 +9,14 @@ interface ServiceCardProps {
 export default function ServiceCard(props: ServiceCardProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
 
-    let modalToggleName: string = `#service-modal-${props.service.id}`
     return (
         <>
-            <button type="button" onClick={() => setShowModal(true)} className="block p-6 w-full max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
+            {/* Actual Card */}
+            <button type="button" onClick={() => setShowModal(true)} className="block py-6 w-2/5 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{props.service.name}</h5>
                 <p className="font-normal text-gray-700">{props.service.address}</p>
             </button>
+            {/* Modal (might move to seperate component later) */}
             {showModal ?
                 <>
                     <div
@@ -72,9 +73,9 @@ export default function ServiceCard(props: ServiceCardProps) {
                                 </div>
                                 {/*footer*/}
                                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                                    <a type="button" className="button shadow-md border-1 p-1 rounded-md mx-2 bg-blue-200 hover:bg-blue-300"
+                                    <a type="button" className="button shadow-md border-1 p-2 rounded-md mx-2 bg-blue-200 hover:bg-blue-300"
                                         href={"mailto:" + props.service.email}>Email Service</a>
-                                    <a type="button" className="button shadow-md border-1 p-1 rounded-md mx-2 bg-green-200 hover:bg-green-300"
+                                    <a type="button" className="button shadow-md border-1 p-2 rounded-md mx-2 bg-green-200 hover:bg-green-300"
                                         href={"tel:" + props.service.phone}>Call Service</a>
                                 </div>
                             </div>
