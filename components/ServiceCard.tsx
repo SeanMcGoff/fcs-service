@@ -9,14 +9,13 @@ interface ServiceCardProps {
 export default function ServiceCard(props: ServiceCardProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
 
+
     return (
         <>
-            {/* Actual Card */}
             <button type="button" onClick={() => setShowModal(true)} className="block py-6 w-2/5 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{props.service.name}</h5>
                 <p className="font-normal text-gray-700">{props.service.address}</p>
             </button>
-            {/* Modal (might move to seperate component later) */}
             {showModal ?
                 <>
                     <div
@@ -83,8 +82,7 @@ export default function ServiceCard(props: ServiceCardProps) {
                     </div>
                     <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
                 </>
-                : null
-            }
+                : null}
         </>
     )
 }
