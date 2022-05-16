@@ -1,22 +1,41 @@
 import { Service } from '@prisma/client'
-import React, { useState } from 'react'
+import Link from 'next/link';
+import React, { useEffect, useState } from 'react'
 import beautifyCauseArea from '../lib/util';
 
 interface ServiceCardProps {
     service: Service;
+    editable: boolean;
 }
 
 export default function ServiceCard(props: ServiceCardProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
 
+    useEffect(() => {
+        console.log(props.editable)
+    })
 
     return (
         <>
             <button type="button" onClick={() => setShowModal(true)} className="block py-6 w-2/5 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{props.service.name}</h5>
-                <p className="font-normal text-gray-700">{props.service.address}</p>
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 inline">{props.service.name}</h5>
+                <p className={"font-normal text-gray-700 "+(props.editable ? "mb-2" : "")}>{props.service.address}</p>
+                {props.editable && 
+                <span>
+                    {!props.service.published ? 
+                    <a href={"/publish/"+props.service.id} 
+                    className="border rounded p-2 mr-1 bg-green-100 hover:bg-green-200">Publish</a>
+                    : 
+                    <a href={"/unpublish/"+props.service.id} 
+                    className="border rounded p-2 mr-1 bg-blue-100 hover:bg-blue-200">Unpublish</a>}
+                    <a href={"/edit/"+props.service.id} 
+                    className="border rounded py-2 pr-3 pl-1 mr-1 bg-yellow-100 hover:bg-yellow-200">Edit ✏️</a>
+                    <a href={"/delete/"+props.service.id} 
+                    className="border rounded py-2 pr-3 pl-1 ml-1 bg-red-200 hover:bg-red-300">Delete 🗑️</a>
+                </span>
+                }    
             </button>
-            {showModal ?
+            {showModal &&
                 <>
                     <div
                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
@@ -81,8 +100,7 @@ export default function ServiceCard(props: ServiceCardProps) {
                         </div>
                     </div>
                     <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-                </>
-                : null}
+                </>}
         </>
     )
 }

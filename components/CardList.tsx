@@ -11,6 +11,7 @@ interface CardListProps {
     perPage: number;
     page: number;
     setPage: (p: number) => void;
+    editable: boolean;
 }
 
 export default function CardList(props: CardListProps) {
@@ -22,14 +23,10 @@ export default function CardList(props: CardListProps) {
     const currentServices = props.services.slice(idxOfFirstService, idxOfLastService);
     const nullCards: number = 5 - currentServices.length;
 
-
-    useEffect(() => {
-        console.log(nullCards)
-    })
-
     return (
         <>
-            {currentServices.map((service: Service) => <ServiceCard service={service} key={service.id} />)}
+            {currentServices.map((service: Service) => <ServiceCard service={service} editable={props.editable} 
+            key={service.id} />)}
             {[...Array(nullCards)].map((_, i) => <NullCard key={i} />)}
             {/*Pagination*/}
             <Pagination page={props.page} perPage={props.perPage}

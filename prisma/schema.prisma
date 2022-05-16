@@ -33,9 +33,3 @@ enum CauseArea {
   HEALTH_AND_HUMAN_SERVICES
   HUNGER_HOMLESSLESS_AND_POVERTY
 }
-
-// Access Tokens for DB Editing
-model Token {
-  id    Int    @id @unique @default(autoincrement())
-  token String @unique
-}
