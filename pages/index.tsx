@@ -57,7 +57,7 @@ const Home: NextPage<HomeProps> = (props: InferGetServerSidePropsType<typeof get
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-
+  //TODO: Make this a client-side request instead
   const services = await prisma.service.findMany({});
   return {
     props: { services }
