@@ -6,6 +6,8 @@ import Navbar from '../components/Navbar';
 import Searchbar from '../components/Searchbar';
 import CardList from '../components/CardList';
 import { useUser } from '@auth0/nextjs-auth0';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface HomeProps {
   services: Service[]
@@ -37,6 +39,7 @@ const Home: NextPage<HomeProps> = (props: InferGetServerSidePropsType<typeof get
   
   return (
     <>
+    <ToastContainer/>
       <div className="bg-gradient-to-b from-slate-200 h-screen w-screen">
         <Navbar loggedIn={user != undefined}/>
         <div className="flex w-full">

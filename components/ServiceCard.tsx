@@ -1,6 +1,7 @@
 import { Service } from '@prisma/client'
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
+import { toast, ToastOptions } from 'react-toastify';
 import beautifyCauseArea from '../lib/util';
 
 interface ServiceCardProps {
@@ -15,6 +16,38 @@ export default function ServiceCard(props: ServiceCardProps) {
         console.log(props.editable)
     })
 
+    const toastOptions: ToastOptions<{}> = {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        }
+
+    const publishService = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        const res = await fetch("/api/publish/"+props.service.id,{method: "POST"})
+        if (res.ok) {
+            setShowModal(false)
+            toast.success("Published Service Successfully!", toastOptions)
+        } else {
+            toast.error(`Error Publishing Service: ${res.statusText}`, toastOptions)
+        }
+    }
+
+    const unPublishService = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        const res = await fetch("/api/unpublish/"+props.service.id,{method: "POST"})
+        if (res.ok) {
+            setShowModal(false)
+            toast.success("Unpublished Service Successfully!", toastOptions)
+        } else {
+            toast.error(`Error Unpublishing Service: ${res.statusText}`, toastOptions)
+        }
+    }
+
     return (
         <>
             <button type="button" onClick={() => setShowModal(true)} className="block py-6 w-2/5 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
@@ -23,11 +56,11 @@ export default function ServiceCard(props: ServiceCardProps) {
                 {props.editable && 
                 <span>
                     {!props.service.published ? 
-                    <a href={"/publish/"+props.service.id} 
-                    className="border rounded p-2 mr-1 bg-green-100 hover:bg-green-200">Publish</a>
+                    <button onClick={(e) => publishService(e)}
+                    className="border rounded p-2 mr-1 bg-green-100 hover:bg-green-200">Publish</button>
                     : 
-                    <a href={"/unpublish/"+props.service.id} 
-                    className="border rounded p-2 mr-1 bg-blue-100 hover:bg-blue-200">Unpublish</a>}
+                    <button onClick={(e) => unPublishService(e)}
+                    className="border rounded p-2 mr-1 bg-blue-100 hover:bg-blue-200">Unpublish</button>}
                     <a href={"/edit/"+props.service.id} 
                     className="border rounded py-2 pr-3 pl-1 mr-1 bg-yellow-100 hover:bg-yellow-200">Edit ✏️</a>
                     <a href={"/delete/"+props.service.id} 
