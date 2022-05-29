@@ -6,18 +6,21 @@ import Navbar from '../components/Navbar';
 import Searchbar from '../components/Searchbar';
 import CardList from '../components/CardList';
 import { useUser } from '@auth0/nextjs-auth0';
+import useSWR from 'swr'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-interface HomeProps {
-  services: Service[]
-}
 
-const Home: NextPage<HomeProps> = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home: NextPage = () => {
 
   // User
-  const { user, error, isLoading } = useUser();
+  const { user, error: userError, isLoading: userLoading } = useUser();
 
+  // Service Data State
+  const fetcher = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
+  const { data: serviceData, error: serviceError, isValidating} = useSWR('/api/services', fetcher)
+
+  
 
   // Search State
   const [query, setQuery] = useState<string>("");
@@ -27,15 +30,17 @@ const Home: NextPage<HomeProps> = (props: InferGetServerSidePropsType<typeof get
   const [page, setPage] = useState<number>(1);
   const [perPage] = useState<number>(5);
 
+
+  if (userLoading || isValidating) return <div className="text-center">Loading...</div>;
+  if (serviceError || userError) return <div className="text-center">{userError ? userError.message : serviceError.message}</div>;
+
   //Service Query
-  const queryRes = props.services
+  const queryRes = serviceData
     .filter((service: Service) => service.published || user != undefined)
     .filter((service: Service) => service.name.toLowerCase().includes(query.toLowerCase()))
     .filter((service: Service) => ca == "ANY" ? true : service.causeArea == ca)
   
-  //loading User
-  if (isLoading) return <div className="text-center">Loading...</div>;
-  if (error) return <div className="text-center">{error.message}</div>;
+  //loading User / service Data
   
   return (
     <>
@@ -55,14 +60,5 @@ const Home: NextPage<HomeProps> = (props: InferGetServerSidePropsType<typeof get
     </>
   )
 }
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  //TODO: Make this a client-side request instead
-  const services = await prisma.service.findMany({});
-  return {
-    props: { services }
-  };
-
-};
 
 export default Home

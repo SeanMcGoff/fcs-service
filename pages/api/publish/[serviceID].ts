@@ -1,8 +1,10 @@
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../lib/prisma';
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
+//TODO: Figure out why typescript hates me
+export default withApiAuthRequired(async function (req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         // Get Service ID
         const { serviceID } = req.query
@@ -45,4 +47,4 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         // If not POST request, return 405 status
         return res.status(405).end("Error: Wrong Request Type")
     }
-}
+})

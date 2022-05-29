@@ -12,9 +12,9 @@ interface ServiceCardProps {
 export default function ServiceCard(props: ServiceCardProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
 
-    useEffect(() => {
-        console.log(props.editable)
-    })
+    //client side publish button update
+    const [publishOverride, setPublishOverride] = useState<boolean>(false);
+    const pb = publishOverride ? !props.service.published : props.service.published
 
     const toastOptions: ToastOptions<{}> = {
         position: "top-center",
@@ -24,7 +24,7 @@ export default function ServiceCard(props: ServiceCardProps) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        }
+    }
 
     const publishService = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
@@ -32,6 +32,7 @@ export default function ServiceCard(props: ServiceCardProps) {
         if (res.ok) {
             setShowModal(false)
             toast.success("Published Service Successfully!", toastOptions)
+            setPublishOverride(!publishOverride)
         } else {
             toast.error(`Error Publishing Service: ${res.statusText}`, toastOptions)
         }
@@ -43,6 +44,7 @@ export default function ServiceCard(props: ServiceCardProps) {
         if (res.ok) {
             setShowModal(false)
             toast.success("Unpublished Service Successfully!", toastOptions)
+            setPublishOverride(!publishOverride)
         } else {
             toast.error(`Error Unpublishing Service: ${res.statusText}`, toastOptions)
         }
@@ -50,24 +52,25 @@ export default function ServiceCard(props: ServiceCardProps) {
 
     return (
         <>
-            <button type="button" onClick={() => setShowModal(true)} className="block py-6 w-2/5 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
+            <div onClick={() => setShowModal(true)} className="text-center block py-6 w-2/5 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 inline">{props.service.name}</h5>
                 <p className={"font-normal text-gray-700 "+(props.editable ? "mb-2" : "")}>{props.service.address}</p>
                 {props.editable && 
                 <span>
-                    {!props.service.published ? 
+                    {!pb ? 
                     <button onClick={(e) => publishService(e)}
-                    className="border rounded p-2 mr-1 bg-green-100 hover:bg-green-200">Publish</button>
+                    className="border rounded py-1 px-2 mr-1 bg-green-100 hover:bg-green-200">Publish</button>
                     : 
                     <button onClick={(e) => unPublishService(e)}
-                    className="border rounded p-2 mr-1 bg-blue-100 hover:bg-blue-200">Unpublish</button>}
+                    className="border rounded py-1 px-2 mr-1 bg-blue-100 hover:bg-blue-200">Unpublish</button>
+                    }
                     <a href={"/edit/"+props.service.id} 
                     className="border rounded py-2 pr-3 pl-1 mr-1 bg-yellow-100 hover:bg-yellow-200">Edit ✏️</a>
                     <a href={"/delete/"+props.service.id} 
                     className="border rounded py-2 pr-3 pl-1 ml-1 bg-red-200 hover:bg-red-300">Delete 🗑️</a>
                 </span>
                 }    
-            </button>
+            </div>
             {showModal &&
                 <>
                     <div

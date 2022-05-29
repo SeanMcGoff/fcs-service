@@ -7,5 +7,4 @@ function beautifyCauseArea(ca: CauseArea): string {
         .join(' ');
 }
 
-
 export default beautifyCauseArea
