@@ -14,13 +14,10 @@ const apiRoute: NextApiHandler<any> = async (req: NextApiRequest, res: NextApiRe
             if (isNaN(nServiceID)) {
                 throw "Error: service ID must be a number"
             }
-            await prisma.service.update({
+            await prisma.service.delete({
                 where: {
                   id: nServiceID,
-                },
-                data: {
-                  published: true,
-                },
+                }
             })
         }
         catch (err) {

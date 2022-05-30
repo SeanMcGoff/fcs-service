@@ -26,6 +26,17 @@ export default function ServiceCard(props: ServiceCardProps) {
         progress: undefined,
     }
 
+    const deleteService = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        const res = await fetch("/api/delete/"+props.service.id,{method: "POST"})
+        if (res.ok) {
+            setShowModal(false)
+            toast.success("Deleted Service Successfully! (Refresh Page to see deletion)", toastOptions)
+        } else {
+            toast.error(`Error Deleting Service: ${res.statusText}`, toastOptions)
+        }
+    }
+
     const publishService = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         const res = await fetch("/api/publish/"+props.service.id,{method: "POST"})
@@ -66,8 +77,8 @@ export default function ServiceCard(props: ServiceCardProps) {
                     }
                     <a href={"/edit/"+props.service.id} 
                     className="border rounded py-2 pr-3 pl-1 mr-1 bg-yellow-100 hover:bg-yellow-200">Edit ✏️</a>
-                    <a href={"/delete/"+props.service.id} 
-                    className="border rounded py-2 pr-3 pl-1 ml-1 bg-red-200 hover:bg-red-300">Delete 🗑️</a>
+                    <button onClick={(e) => deleteService(e)}
+                    className="border rounded py-2 pr-3 pl-1 ml-1 bg-red-200 hover:bg-red-300">Delete 🗑️</button>
                 </span>
                 }    
             </div>
