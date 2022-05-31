@@ -1,7 +1,9 @@
 import { Service } from '@prisma/client'
 import Link from 'next/link';
+import router from 'next/router';
 import React, { useEffect, useReducer, useState } from 'react'
 import { toast, ToastOptions } from 'react-toastify';
+import toastOptions from '../lib/globals';
 import beautifyCauseArea from '../lib/util';
 
 interface ServiceCardProps {
@@ -16,22 +18,14 @@ export default function ServiceCard(props: ServiceCardProps) {
     const [publishOverride, setPublishOverride] = useState<boolean>(false);
     const pb = publishOverride ? !props.service.published : props.service.published
 
-    const toastOptions: ToastOptions<{}> = {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-    }
 
     const deleteService = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         const res = await fetch("/api/delete/"+props.service.id,{method: "POST"})
         if (res.ok) {
             setShowModal(false)
-            toast.success("Deleted Service Successfully! (Refresh Page to see deletion)", toastOptions)
+            await router.push("/?tor=Service Deleted!", undefined)
+            window.location.reload()
         } else {
             toast.error(`Error Deleting Service: ${res.statusText}`, toastOptions)
         }
