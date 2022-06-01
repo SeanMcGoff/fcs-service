@@ -69,7 +69,7 @@ export default function ServiceCard(props: ServiceCardProps) {
                     <button onClick={(e) => unPublishService(e)}
                     className="border rounded py-1 px-2 mr-1 bg-blue-100 hover:bg-blue-200">Unpublish</button>
                     }
-                    <a href={"/edit/"+props.service.id} 
+                    <a href={"/edit_service/"+props.service.id} 
                     className="border rounded py-2 pr-3 pl-1 mr-1 bg-yellow-100 hover:bg-yellow-200">Edit ✏️</a>
                     <button onClick={(e) => deleteService(e)}
                     className="border rounded py-2 pr-3 pl-1 ml-1 bg-red-200 hover:bg-red-300">Delete 🗑️</button>

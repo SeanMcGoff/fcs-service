@@ -1,16 +1,29 @@
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { CauseArea, Service } from '@prisma/client'
 import { useForm } from 'react-hook-form'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import beautifyCauseArea from '../lib/util'
 
 interface Props {
     onSubmit: (data: any) => void
     serviceNames: string[]
+    oldService: Service
 }
 
 const ServiceForm = (props: Props) => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+        defaultValues: {
+            name: props.oldService.name,
+            causeArea: props.oldService.causeArea,
+            address: props.oldService.address,
+            email: props.oldService.email,
+            phone: props.oldService.phone,
+            maxStudents: props.oldService.maxStudents,
+            availableStudentSlots: props.oldService.availableStudentSlots,
+            published: props.oldService.published,
+            reminded: props.oldService.reminded
+        }
+    });
     const emailRegExp: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const inputClassName = "appearance-none block w-full bg-gray-200 text-gray-700 border \
     border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -18,7 +31,7 @@ const ServiceForm = (props: Props) => {
     rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition \
     duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mx-auto cursor-pointer"
     
-    const uniqueName = (name: string) => !(props.serviceNames.includes(name))
+    const uniqueName = (name: string) => !(props.serviceNames.includes(name)) || name == props.oldService.name
 
     return (
         <>
@@ -56,7 +69,9 @@ const ServiceForm = (props: Props) => {
                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                         Work
                         <textarea style={{resize: "none"}} className={inputClassName} {...register("work")}
-                        id="work" placeholder="What does the work entail at this Service Opportunity?">
+                        id="work" placeholder="What does the work entail at this Service Opportunity?"
+                        >
+                        {props.oldService.name}
                         </textarea>
                     </label>
                 </div>
@@ -133,10 +148,12 @@ const ServiceForm = (props: Props) => {
                         Notes
                         <textarea style={{resize: "none"}} className={inputClassName} {...register("notes")}
                         id="work" placeholder="This field is for other notes on this service.">
+                        {props.oldService.notes}
                         </textarea>
                     </label>
                 </div>
-                <input type="submit" className="button bg-emerald-300 hover:bg-emerald-400 p-2 rounded-md mx-auto" value="Create Service"></input>
+                <input type="submit" className="button bg-emerald-300 hover:bg-emerald-400 p-2 rounded-md mx-auto" value="Update Service"></input>
+                <a href="/" type="button" className="button bg-red-300 hover:bg-red-400 p-2 rounded-md mx-auto">Cancel Changes</a>
             </div>
         </form>
         </>

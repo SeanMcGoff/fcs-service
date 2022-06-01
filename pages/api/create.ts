@@ -4,9 +4,6 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../lib/prisma';
 
-type Data = {
-    name: string
-}
 
 const apiRoute: NextApiHandler<any> = async (req: NextApiRequest, res: NextApiResponse) => {
     // Filter Out non-POST reqs
