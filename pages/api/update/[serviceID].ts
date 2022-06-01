@@ -8,7 +8,6 @@ const apiRoute: NextApiHandler<any> = async (req: NextApiRequest, res: NextApiRe
     // Filter Out non-POST reqs
     if (req.method !== 'POST') {
         res.status(405).send({ message: "Error: Wrong Request Type"})
-        return
     }
     let updateData = req.body
     const { serviceID } = req.query
@@ -31,7 +30,7 @@ const apiRoute: NextApiHandler<any> = async (req: NextApiRequest, res: NextApiRe
     catch (err) {
         // for custom errors
         if (typeof err === 'string') {
-            return res.status(400).end(err)
+            res.status(400).end(err)
         }
         //prisma errors
         let prismaErr = err as PrismaClientKnownRequestError
@@ -44,10 +43,10 @@ const apiRoute: NextApiHandler<any> = async (req: NextApiRequest, res: NextApiRe
             res.status(400).end("Error: No entry found")
         }
         //just send the prisma error code if one pops up
-        return res.status(400).end(`Prisma error code ${prismaErr.code}`)
+        res.status(400).end(`Prisma error code ${prismaErr.code}`)
     }
     // If no error, return 200 Status
-    return res.status(200).end("OK")
+    res.status(200).end("OK")
 }
 
 export default withApiAuthRequired(apiRoute)

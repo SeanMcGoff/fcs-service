@@ -33,7 +33,7 @@ const Home: NextPage = (props) => {
 
 
   // Service Data State
-  const fetcher = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
+  const fetcher = (url: string) => fetch(url).then(r => r.json())
   const { data: serviceData, error: serviceError, isValidating} = useSWR('/api/services', fetcher)
 
   // Toast on Refresh code
@@ -43,7 +43,7 @@ const Home: NextPage = (props) => {
       setTorShown(true)
       router.push("/", undefined, {shallow: false})
     }
-  })
+  }, [tor, torShown, userLoading, isValidating, router])
 
   //User and Service Loading
   if (userLoading || isValidating) return <div className="text-center">Loading...</div>;

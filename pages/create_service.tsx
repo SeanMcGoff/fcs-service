@@ -18,7 +18,7 @@ const CreateService: NextPage = (props) => {
   const { user, error: userError, isLoading: userLoading } = useUser();
 
   // Service Data State
-  const fetcher = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
+  const fetcher = (url: string) => fetch(url).then(r => r.json())
   const { data: serviceNames, error: serviceError, isValidating} = useSWR('/api/servicenames', fetcher)
   if (userLoading || isValidating) return <div className="text-center">Loading...</div>;
   if (serviceError || userError) return <div className="text-center">{userError ? userError.message : serviceError.message}</div>;

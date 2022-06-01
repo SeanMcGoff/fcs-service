@@ -3,6 +3,7 @@ import { CauseArea, Service } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import React, { useEffect, useRef } from 'react'
 import beautifyCauseArea from '../lib/util'
+import Link from 'next/link';
 
 interface Props {
     onSubmit: (data: any) => void
@@ -10,20 +11,38 @@ interface Props {
     oldService: Service
 }
 
+type FormInputs = {
+    name: string
+    causeArea: CauseArea
+    work: string | null
+    address: string
+    email: string
+    phone: string
+    maxStudents: number
+    availableStudentSlots: number
+    published: boolean
+    reminded: boolean
+    notes: string | null
+}
+
 const ServiceForm = (props: Props) => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+
+    const { register, handleSubmit, getValues, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             name: props.oldService.name,
             causeArea: props.oldService.causeArea,
+            work: props.oldService.work,
             address: props.oldService.address,
             email: props.oldService.email,
             phone: props.oldService.phone,
             maxStudents: props.oldService.maxStudents,
             availableStudentSlots: props.oldService.availableStudentSlots,
             published: props.oldService.published,
-            reminded: props.oldService.reminded
+            reminded: props.oldService.reminded,
+            notes: props.oldService.notes
         }
     });
+
     const emailRegExp: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const inputClassName = "appearance-none block w-full bg-gray-200 text-gray-700 border \
     border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -32,6 +51,7 @@ const ServiceForm = (props: Props) => {
     duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mx-auto cursor-pointer"
     
     const uniqueName = (name: string) => !(props.serviceNames.includes(name)) || name == props.oldService.name
+    const leqmaxStudents = (as: number) => as < getValues("maxStudents")
 
     return (
         <>
@@ -69,9 +89,7 @@ const ServiceForm = (props: Props) => {
                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                         Work
                         <textarea style={{resize: "none"}} className={inputClassName} {...register("work")}
-                        id="work" placeholder="What does the work entail at this Service Opportunity?"
-                        >
-                        {props.oldService.name}
+                        id="work" placeholder="What does the work entail at this Service Opportunity?">
                         </textarea>
                     </label>
                 </div>
@@ -117,12 +135,12 @@ const ServiceForm = (props: Props) => {
                 <div className="w-full md:w-1/4 px-3 mb-6 md:mb-0">
                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                         # Available*
-                        <input className={inputClassName} {...register("availableStudentSlots", { required: true, min: 0, max: watch("maxStudents")})}
+                        <input className={inputClassName} {...register("availableStudentSlots", { required: true, min: 0, validate: leqmaxStudents})}
                         id="availableStudentSlots" type="number"  placeholder="10">
                         </input>
                         {errors.availableStudentSlots?.type === 'required' && <span className="text-red-500">Field Required</span>}
                         {errors.availableStudentSlots?.type === 'min' && <span className="text-red-500">Must be at least 0</span>}
-                        {errors.availableStudentSlots?.type === 'max' && <span className="text-red-500">Must be less than or equal to Max Slots</span>}
+                        {errors.availableStudentSlots?.type === 'validate' && <span className="text-red-500">Must be less than or equal to Max Slots</span>}
                     </label>
                 </div>
                 <h3 className="w-full text-center md:w-full px-3 mb-6 md:mb-2">
@@ -148,12 +166,11 @@ const ServiceForm = (props: Props) => {
                         Notes
                         <textarea style={{resize: "none"}} className={inputClassName} {...register("notes")}
                         id="work" placeholder="This field is for other notes on this service.">
-                        {props.oldService.notes}
                         </textarea>
                     </label>
                 </div>
                 <input type="submit" className="button bg-emerald-300 hover:bg-emerald-400 p-2 rounded-md mx-auto" value="Update Service"></input>
-                <a href="/" type="button" className="button bg-red-300 hover:bg-red-400 p-2 rounded-md mx-auto">Cancel Changes</a>
+                <Link href="/"><a type="button" className="button bg-red-300 hover:bg-red-400 p-2 rounded-md mx-auto">Cancel Changes</a></Link>
             </div>
         </form>
         </>

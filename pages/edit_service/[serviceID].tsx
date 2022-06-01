@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react'
-import type { GetServerSideProps, NextPage, InferGetServerSidePropsType } from 'next'
-import prisma from '../../lib/prisma';
+import type { NextPage } from 'next'
 import { Service } from '@prisma/client';
 import Navbar from '../../components/Navbar';
 import { useUser } from '@auth0/nextjs-auth0';
@@ -19,7 +17,7 @@ const EditService: NextPage = (props) => {
   const { user, error: userError, isLoading: userLoading } = useUser();
 
   // Service Data State
-  const fetcher = (url: RequestInfo | URL) => fetch(url).then(r => r.json())
+  const fetcher = (url: string) => fetch(url).then(r => r.json())
   const { data: serviceData, error: serviceDataError, isValidating: validSData} = useSWR('/api/services', fetcher)
   const { data: serviceNames, error: serviceNamesError, isValidating: validSNames} = useSWR('/api/servicenames', fetcher)
   if (userLoading || validSData || validSNames) return <div className="text-center">Loading...</div>;
@@ -28,7 +26,6 @@ const EditService: NextPage = (props) => {
       serviceDataError.message : serviceNamesError.message}</div>;
   }
   const oldService = serviceData.filter((s: Service) => s.id.toString() == serviceID)[0]
-  console.log(oldService)
   const UpdateService = async (data: Object) => {
       // Send the data to the server in JSON format.
       const JSONdata = JSON.stringify(data)
@@ -61,7 +58,9 @@ const EditService: NextPage = (props) => {
         <Navbar loggedIn={user != undefined} creatingService={true}/>
         <div className="flex w-full">
           <div className="container mx-auto flex-grow">
-            <EditServiceForm onSubmit={UpdateService} serviceNames={serviceNames} oldService={oldService}/>
+            { oldService &&
+              <EditServiceForm onSubmit={UpdateService} serviceNames={serviceNames} oldService={oldService}/>
+            }
           </div>
         </div>
       </div>

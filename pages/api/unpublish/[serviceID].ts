@@ -42,10 +42,10 @@ const apiRoute: NextApiHandler<any> = async (req: NextApiRequest, res: NextApiRe
             res.status(400).end(`Prisma error code ${prismaErr.code}`)
         }
         // If no error, return 200 Status
-        return res.status(200).end("OK")
+        res.status(200).end("OK")
     } else {
         // If not POST request, return 405 status
-        return res.status(405).end("Error: Wrong Request Type")
+        res.status(405).end("Error: Wrong Request Type")
     }
 }
 
