@@ -51,7 +51,7 @@ const ServiceForm = (props: Props) => {
     duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mx-auto cursor-pointer"
     
     const uniqueName = (name: string) => !(props.serviceNames.includes(name)) || name == props.oldService.name
-    const leqmaxStudents = (as: number) => as < getValues("maxStudents")
+    const leqmaxStudents = (as: number) => as <= getValues("maxStudents")
 
     return (
         <>

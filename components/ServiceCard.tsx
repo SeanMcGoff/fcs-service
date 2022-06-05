@@ -31,6 +31,11 @@ export default function ServiceCard(props: ServiceCardProps) {
         }
     }
 
+    const editService = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        router.push("/edit_service/"+props.service.id, undefined)
+    }
+
     const publishService = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         const res = await fetch("/api/publish/"+props.service.id,{method: "POST"})
@@ -57,7 +62,7 @@ export default function ServiceCard(props: ServiceCardProps) {
 
     return (
         <>
-            <div onClick={() => setShowModal(true)} className="text-center block py-6 w-2/5 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
+            <div onClick={() => setShowModal(true)} className="text-center block py-6 lg:w-2/5 md:w-4/5 bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 my-2 mx-auto">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 inline">{props.service.name}</h5>
                 <p className={"font-normal text-gray-700 "+(props.editable ? "mb-2" : "")}>{props.service.address}</p>
                 {props.editable && 
@@ -69,8 +74,8 @@ export default function ServiceCard(props: ServiceCardProps) {
                     <button onClick={(e) => unPublishService(e)}
                     className="border rounded py-1 px-2 mr-1 bg-blue-100 hover:bg-blue-200">Unpublish</button>
                     }
-                    <a href={"/edit_service/"+props.service.id} 
-                    className="border rounded py-2 pr-3 pl-1 mr-1 bg-yellow-100 hover:bg-yellow-200">Edit ✏️</a>
+                    <button onClick={(e) => editService(e)} 
+                    className="border rounded py-2 pr-3 pl-1 mr-1 bg-yellow-100 hover:bg-yellow-200">Edit ✏️</button>
                     <button onClick={(e) => deleteService(e)}
                     className="border rounded py-2 pr-3 pl-1 ml-1 bg-red-200 hover:bg-red-300">Delete 🗑️</button>
                 </span>

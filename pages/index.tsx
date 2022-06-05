@@ -62,7 +62,7 @@ const Home: NextPage = (props) => {
         <Navbar loggedIn={user != undefined} creatingService={false}/>
         <div className="flex w-full">
           <div className="container mx-auto flex-grow">
-            <div className="w-3/5 mx-auto">
+            <div className="lg:w-3/5 md:w-fit mx-auto">
               <Searchbar query={query} ca={ca} onQueryChange={setQuery} onCaChange={setCa} />
             </div>
             <CardList services={queryRes} query={query} ca={ca}
