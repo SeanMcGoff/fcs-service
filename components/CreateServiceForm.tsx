@@ -11,7 +11,7 @@ interface Props {
 
 const ServiceForm = (props: Props) => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const emailRegExp: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const emailRegExp: RegExp = /\S+@\S+\.\S+/
     const inputClassName = "appearance-none block w-full bg-gray-200 text-gray-700 border \
     border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
     const checkboxClassName = "block form-check-input appearance-none h-4 w-4 border border-gray-300 \
